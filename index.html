@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <title>Pokemon with Data</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        img {
+            display: inline-block;
+            vertical-align: top;
+            width: 100px;
+            margin: 10px;
+        }
+
+        .inline {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #content {
+            width: 75%;
+        }
+
+        #pokedex {
+            width: 20%;
+            height: 500px;
+            border: 20px red solid;
+            margin-top: 30px;
+        }
+
+        #pokeImage {
+            width: 50%;
+            margin-left: 25%;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: green;
+        }
+
+        h3 {
+            margin: 20px 0px 0px 20px;
+        }
+
+        p {
+            margin: 5px 0px 0px 20px;
+        }
+
+        ul {
+            margin: 5px 0px 0px 50px;
+        }
+
+    </style>
+    <script type="text/javascript">
+    // 
+
+        $(document).ready(function() {
+            for (var i = 1; i <= 151; i++) {
+                var theImg = "img" + i;
+                var newTag = "<img id='" + theImg + "' src='https://pokeapi.co/media/img/" + i + ".png' alt=''>";
+                $('#content').append(newTag);
+                $('#' + theImg).click(function() {
+                    var selImg = $(this).attr('id');
+                    var selImgSrc = $(this).attr('src');
+
+                    $('#pokedex').children().remove();
+                    $('#pokedex').append("<h2>Loading...</h2>");
+                                        
+                    $.get("https://pokeapi.co/api/v2/pokemon/" + selImg.replace("img", "") + "/", function(jsonData) {
+                        console.log(jsonData.types);
+
+                        $('#pokedex').children().remove();
+
+                        var tag = "<h1>" + jsonData.name + "</h1>";
+                        $('#pokedex').append(tag);
+
+                        tag = "<img id='pokeImage' src='" + selImgSrc + "' alt='Pokemon Image'>";
+                        $('#pokedex').append(tag);
+
+                        tag = "<h3>Types</h3>";
+                        $('#pokedex').append(tag);
+                        
+                        var liTag = "";
+                        for (var i = 0; i < jsonData.types.length; i++) {
+                            liTag += "<li>" + jsonData.types[i].type.name + "</li>";
+                        }
+
+                        tag = "<ul>" + liTag + "</ul>";
+                        $('#pokedex').append(tag);
+                        
+                        tag = "<h3>Height</h3>";
+                        $('#pokedex').append(tag);
+                        
+                        tag = "<p>" + jsonData.height + "</p>";
+                        $('#pokedex').append(tag);
+                        
+                        tag = "<h3>Weight</h3>";
+                        $('#pokedex').append(tag);
+                        
+                        tag = "<p>" + jsonData.weight + "</p>";
+                        $('#pokedex').append(tag);
+
+                    }, "json");
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="content" class="inline"></div>
+    <div id="pokedex" class="inline"></div>
+</body>
+</html>
+ 
